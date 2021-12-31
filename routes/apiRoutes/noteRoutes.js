@@ -2,36 +2,31 @@ const fs = require('fs')
 const path = require('path')
 const uniqid = require('uniqid')
 const router = require('express').Router()
-const notes = require("../../db/db.json")
+const notesArray = require("../../db/db.json")
 
 router.get('/notes', (req, res) => {
-    let results = notes
+    let results = notesArray
     res.json(results);
-
-    return notes;
 })
 
 router.post('/notes', (req, res) => {
     req.body.id = uniqid.time();
     console.log('req.body:', req.body)
-    console.log('notes:', notes)
-
 
     const note = req.body
     
     console.log('note:', note)
 
-    notes.push(note);
-
-    console.log('notes:', notes)
+    notesArray.push(note);
 
     fs.writeFileSync(
         path.join(__dirname, '../../db/db.json'), 
-        JSON.stringify({ notes })
+        JSON.stringify(notesArray)
     )
     
     if(res) {
         console.log(`Post successful!`)
+        return res.json()
     }
 })
 
